@@ -1,82 +1,73 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-import { getAllThemes, saveTheme } from '@/theme/themes'
-import { applyTheme } from '@/core/theme'
-import { updateSetting } from '@/core/common'
+/* eslint-disable */
+// https://github.com/PimpTrizkit/PJs/wiki/12.-Shade,-Blend-and-Convert-a-Web-Color-(pSBC.js)#micro-functions-version-4
 
-const { createThemeColors } = require('./utils') as {
-  createThemeColors: (primary: string, font: string | null, isDark: boolean) => LX.Theme['config']['themeColors']
+/**
+ * Blend color (Lighten or Darken)
+ * @param {number} p 混合百分比 范围 0.0 - 1.0
+ * @param {string} c0 rgb(a) color1
+ * @param {string} c1 rgb(a) color2
+ * @returns color
+ */
+exports.RGB_Linear_Blend=(p,c0,c1)=>{
+	var i=parseInt,r=Math.round,P=1-p,[a,b,c,d]=c0.split(","),[e,f,g,h]=c1.split(","),x=d||h,j=x?","+(!d?h:!h?d:r((parseFloat(d)*P+parseFloat(h)*p)*1000)/1000+")"):")";
+	return"rgb"+(x?"a(":"(")+r(i(a[3]=="a"?a.slice(5):a.slice(4))*P+i(e[3]=="a"?e.slice(5):e.slice(4))*p)+","+r(i(b)*P+i(f)*p)+","+r(i(c)*P+i(g)*p)+j;
 }
 
-export const CUSTOM_PRIMARY_ID = 'custom_primary'
-
-// 预设主色，第一个是默认的香槟金
-export const PRESET_PRIMARY_COLORS = [
-  { name: '香槟金', hex: '#D4B98C' },
-  { name: '玫瑰', hex: '#D98A9B' },
-  { name: '海蓝', hex: '#5B8DB8' },
-  { name: '薄荷', hex: '#6FB89A' },
-  { name: '暮紫', hex: '#9A86C4' },
-] as const
-
-// '#D4B98C' 或 '#fff' -> 'rgb(212, 185, 140)'，格式不对返回 null
-export const hexToRgb = (hex: string): string | null => {
-  let h = hex.trim().replace(/^#/, '')
-  if (h.length == 3) h = h.split('').map(c => c + c).join('')
-  if (!/^[0-9a-fA-F]{6}$/.test(h)) return null
-  const n = parseInt(h, 16)
-  return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`
+/**
+ * Blend color (Lighten or Darken)
+ * @param {number} p 混合百分比 范围 0.0 - 1.0
+ * @param {string} c0 rgb(a) color1
+ * @param {string} c1 rgb(a) color2
+ * @returns color
+ */
+exports.RGB_Log_Blend=(p,c0,c1)=>{
+	var i=parseInt,r=Math.round,P=1-p,[a,b,c,d]=c0.split(","),[e,f,g,h]=c1.split(","),x=d||h,j=x?","+(!d?h:!h?d:r((parseFloat(d)*P+parseFloat(h)*p)*1000)/1000+")"):")";
+	return"rgb"+(x?"a(":"(")+r((P*i(a[3]=="a"?a.slice(5):a.slice(4))**2+p*i(e[3]=="a"?e.slice(5):e.slice(4))**2)**0.5)+","+r((P*i(b)**2+p*i(f)**2)**0.5)+","+r((P*i(c)**2+p*i(g)**2)**0.5)+j;
 }
 
-export const buildCustomPrimaryTheme = (hex: string, isDark: boolean): LX.Theme | null => {
-  const primary = hexToRgb(hex)
-  if (!primary) return null
 
-  const themeColors = createThemeColors(
-    primary,
-    isDark ? 'rgb(255, 255, 255)' : 'rgb(33, 33, 33)',
-    isDark,
-  )
-
-  const extInfo = isDark
-    ? {
-        'c-app-background': 'rgba(11, 11, 15, 1)',
-        'c-main-background': 'rgba(11, 11, 15, 1)',
-        'bg-image': '',
-        'bg-image-position': 'center',
-        'bg-image-size': 'cover',
-        'c-badge-primary': 'var(c-primary-dark-200)',
-        'c-badge-secondary': 'var(c-primary)',
-        'c-badge-tertiary': 'var(c-primary-dark-300)',
-      }
-    : {
-        'c-app-background': 'var(c-primary-light-600-alpha-700)',
-        'c-main-background': 'rgba(255, 255, 255, 1)',
-        'bg-image': '',
-        'bg-image-position': 'center',
-        'bg-image-size': 'cover',
-        'c-badge-primary': 'var(c-primary)',
-        'c-badge-secondary': 'var(c-primary-light-100)',
-        'c-badge-tertiary': 'var(c-primary-light-100)',
-      }
-
-  return {
-    id: CUSTOM_PRIMARY_ID,
-    name: '自定义主色',
-    isDark,
-    isCustom: true,
-    config: { themeColors, extInfo },
-  } as unknown as LX.Theme
+/**
+ * Shade color (Lighten or Darken)
+ * @param {number} p Shade 百分比范围为 -1.0 - 1.0 负为黑色，正为白色
+ * @param {string} c0 rgb(a) color
+ * @returns color
+ */
+exports.RGB_Linear_Shade=(p,c0)=>{
+	var i=parseInt,r=Math.round,[a,b,c,d]=c0.split(","),n=p<0,t=n?0:255*p,P=n?1+p:1-p;
+	return"rgb"+(d?"a(":"(")+r(i(a[3]=="a"?a.slice(5):a.slice(4))*P+t)+","+r(i(b)*P+t)+","+r(i(c)*P+t)+(d?","+d:")");
 }
 
-// 保存、记住选择并立即生效，成功返回主题 id，颜色格式不对返回 null
-export const applyCustomPrimary = async(hex: string, isDark: boolean): Promise<string | null> => {
-  const theme = buildCustomPrimaryTheme(hex, isDark)
-  if (!theme) return null
-  await getAllThemes() // 确保用户主题列表已初始化
-  await saveTheme(theme)
-  updateSetting({ 'theme.id': theme.id })
-  // 不用 core/theme 的 setTheme：它在 id 相同时会跳过，换颜色就不生效了
-  // 传副本，因为 buildActiveThemeColors 会修改传入对象
-  applyTheme(JSON.parse(JSON.stringify(theme)) as LX.Theme)
-  return theme.id
+
+/**
+ * Shade color (Lighten or Darken)
+ * @param {number} p Shade 百分比范围为 -1.0 - 1.0 负为黑色，正为白色
+ * @param {string} c0 rgb(a) color
+ * @returns color
+ */
+exports.RGB_Log_Shade=(p,c0)=>{
+	var i=parseInt,r=Math.round,[a,b,c,d]=c0.split(","),n=p<0,t=n?0:p*255**2,P=n?1+p:1-p;
+	return"rgb"+(d?"a(":"(")+r((P*i(a[3]=="a"?a.slice(5):a.slice(4))**2+t)**0.5)+","+r((P*i(b)**2+t)**0.5)+","+r((P*i(c)**2+t)**0.5)+(d?","+d:")");
+}
+
+
+/**
+ * 修改透明度
+ * @param {number} p 透明度 -1.0 - 1.0
+ * @param {string} color
+ * @returns color
+ */
+exports.RGB_Alpha_Shade = (p, color) => {
+  var i = parseInt
+  var n = p < 0
+  var [r, g, b, a] = color.split(",")
+  r = r[3] == 'a' ? r.slice(5) : r.slice(4)
+  if (a) {
+    a = parseFloat(a)
+    a = a - (n ? (1 - a) * p : a * p)
+    a = n ? Math.max(0, a) : Math.min(1, a)
+  } else {
+    a = 1 - p
+    a = Math.min(1, a)
+  }
+  return `rgba(${i(r)}, ${i(g)}, ${i(b)}, ${a.toFixed(2)})`
 }
