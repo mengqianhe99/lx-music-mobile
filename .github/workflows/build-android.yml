@@ -36,6 +36,13 @@ jobs:
       - name: Install dependencies
         run: npm ci || npm install
 
+      - name: Change package name and app name
+        run: |
+          sed -i 's/applicationId "[^"]*"/applicationId "com.meng.music"/' android/app/build.gradle
+          sed -i 's|<string name="app_name">[^<]*</string>|<string name="app_name">moomusic</string>|' android/app/src/main/res/values/strings.xml
+          grep -n "applicationId" android/app/build.gradle
+          grep -n "app_name" android/app/src/main/res/values/strings.xml
+
       - name: Prepare keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
