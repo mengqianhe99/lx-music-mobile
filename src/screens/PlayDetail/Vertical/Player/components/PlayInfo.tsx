@@ -9,24 +9,19 @@ import { createStyle } from '@/utils/tools'
 import Text from '@/components/common/Text'
 import { useBufferProgress } from '@/plugins/player'
 
-// const FONT_SIZE = 13
-
 const PlayTimeCurrent = ({ timeStr }: { timeStr: string }) => {
   const theme = useTheme()
-  // console.log(timeStr)
-  return <Text color={theme['c-500']}>{timeStr}</Text>
+  return <Text size={12} color={theme['c-font-label']}>{timeStr}</Text>
 }
 
 const PlayTimeMax = memo(({ timeStr }: { timeStr: string }) => {
   const theme = useTheme()
-  return <Text color={theme['c-500']}>{timeStr}</Text>
+  return <Text size={12} color={theme['c-font-label']}>{timeStr}</Text>
 })
 
 export default () => {
   const { maxPlayTimeStr, nowPlayTimeStr, progress, maxPlayTime } = useProgress()
   const buffered = useBufferProgress()
-
-  // console.log('render playInfo')
 
   return (
     <>
@@ -53,8 +48,7 @@ const styles = createStyle({
   info: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // alignItems: 'center',
-    // backgroundColor: '#ccc',
+    paddingHorizontal: 4,
   },
   status: {
     flexGrow: 1,
