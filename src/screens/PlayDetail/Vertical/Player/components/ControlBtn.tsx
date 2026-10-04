@@ -9,6 +9,15 @@ import { useWindowSize } from '@/utils/hooks'
 import { BTN_WIDTH } from './MoreBtn/Btn'
 import { useMemo } from 'react'
 
+// 主色偏亮时按钮图标用深色，偏暗时用白色，保证看得清
+const getOnPrimaryColor = (primary: string) => {
+  const nums = primary.match(/\d+/g)
+  if (!nums || nums.length < 3) return '#fff'
+  const [r, g, b] = nums.map(Number)
+  const luminance = 0.299 * r + 0.587 * g + 0.114 * b
+  return luminance > 150 ? '#0B0B0F' : '#ffffff'
+}
+
 const PrevBtn = ({ size }: { size: number }) => {
   const theme = useTheme()
   const handlePlayPrev = () => {
@@ -16,7 +25,7 @@ const PrevBtn = ({ size }: { size: number }) => {
   }
   return (
     <TouchableOpacity style={{ ...styles.cotrolBtn, width: size, height: size }} activeOpacity={0.5} onPress={handlePlayPrev}>
-      <Icon name='prevMusic' color={theme['c-button-font']} rawSize={size * 0.7} />
+      <Icon name='prevMusic' color={theme['c-font']} rawSize={size * 0.6} />
     </TouchableOpacity>
   )
 }
@@ -27,7 +36,7 @@ const NextBtn = ({ size }: { size: number }) => {
   }
   return (
     <TouchableOpacity style={{ ...styles.cotrolBtn, width: size, height: size }} activeOpacity={0.5} onPress={handlePlayNext}>
-      <Icon name='nextMusic' color={theme['c-button-font']} rawSize={size * 0.7} />
+      <Icon name='nextMusic' color={theme['c-font']} rawSize={size * 0.6} />
     </TouchableOpacity>
   )
 }
@@ -35,9 +44,21 @@ const NextBtn = ({ size }: { size: number }) => {
 const TogglePlayBtn = ({ size }: { size: number }) => {
   const theme = useTheme()
   const isPlay = useIsPlay()
+  const circleSize = size * 1.05
   return (
-    <TouchableOpacity style={{ ...styles.cotrolBtn, width: size, height: size }} activeOpacity={0.5} onPress={togglePlay}>
-      <Icon name={isPlay ? 'pause' : 'play'} color={theme['c-button-font']} rawSize={size * 0.7} />
+    <TouchableOpacity
+      style={{
+        ...styles.cotrolBtn,
+        ...styles.playBtn,
+        width: circleSize,
+        height: circleSize,
+        borderRadius: circleSize / 2,
+        backgroundColor: theme['c-primary'],
+      }}
+      activeOpacity={0.7}
+      onPress={togglePlay}
+    >
+      <Icon name={isPlay ? 'pause' : 'play'} color={getOnPrimaryColor(theme['c-primary'])} rawSize={circleSize * 0.45} />
     </TouchableOpacity>
   )
 }
@@ -75,14 +96,12 @@ const styles = createStyle({
     flexShrink: 1,
     paddingHorizontal: '4%',
     paddingVertical: 22,
-    // backgroundColor: 'rgba(0, 0, 0, .1)',
   },
   cotrolBtn: {
     justifyContent: 'center',
     alignItems: 'center',
-
-    // backgroundColor: '#ccc',
-    shadowOpacity: 1,
-    textShadowRadius: 1,
+  },
+  playBtn: {
+    elevation: 4,
   },
 })
