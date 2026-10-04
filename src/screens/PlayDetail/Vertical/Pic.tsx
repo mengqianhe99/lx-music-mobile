@@ -10,9 +10,12 @@ import { HEADER_HEIGHT } from './components/Header'
 import Image from '@/components/common/Image'
 import { useStatusbarHeight } from '@/store/common/hook'
 import commonState from '@/store/common/state'
+import { useTheme } from '@/store/theme/hook'
 
+const COVER_RADIUS = 28
 
 export default ({ componentId }: { componentId: string }) => {
+  const theme = useTheme()
   const musicInfo = usePlayerMusicInfo()
   const { width: winWidth, height: winHeight } = useWindowSize()
   const statusBarHeight = useStatusbarHeight()
@@ -26,21 +29,22 @@ export default ({ componentId }: { componentId: string }) => {
   useNavigationComponentDidAppear(componentId, () => {
     setAnimated(true)
   })
-  // console.log('render pic')
 
   const style = useMemo(() => {
-    const imgWidth = Math.min(winWidth * 0.8, (winHeight - statusBarHeight - HEADER_HEIGHT) * 0.5)
+    const imgWidth = Math.min(winWidth * 0.78, (winHeight - statusBarHeight - HEADER_HEIGHT) * 0.5)
     return {
       width: imgWidth,
       height: imgWidth,
-      borderRadius: 2,
+      borderRadius: COVER_RADIUS,
     }
   }, [statusBarHeight, winHeight, winWidth])
 
   return (
     <View style={styles.container}>
-      <View style={{ ...styles.content, elevation: animated ? 3 : 0 }}>
-        <Image url={pic} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} style={style} />
+      <View style={{ ...styles.ring, borderColor: theme['c-primary-alpha-600'] }}>
+        <View style={{ ...styles.content, elevation: animated ? 6 : 0 }}>
+          <Image url={pic} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} style={style} />
+        </View>
       </View>
     </View>
   )
@@ -52,11 +56,14 @@ const styles = createStyle({
     flexShrink: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'rgba(0,0,0,0.1)',
+  },
+  ring: {
+    padding: 7,
+    borderRadius: COVER_RADIUS + 7,
+    borderWidth: 1,
   },
   content: {
-    // elevation: 3,
     backgroundColor: 'rgba(0,0,0,0)',
-    borderRadius: 4,
+    borderRadius: COVER_RADIUS,
   },
 })
