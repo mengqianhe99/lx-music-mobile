@@ -6,6 +6,8 @@ import { useIsPlay } from '@/store/player/hook'
 import { createStyle } from '@/utils/tools'
 import { useWindowSize } from '@/utils/hooks'
 import { BTN_WIDTH } from './MoreBtn/Btn'
+import PlayModeBtn from './MoreBtn/PlayModeBtn'
+import MusicAddBtn from './MoreBtn/MusicAddBtn'
 import { useMemo } from 'react'
 
 const getOnPrimaryColor = (primary: string) => {
@@ -95,9 +97,11 @@ export default () => {
 
   return (
     <View style={containerStyle}>
+      <PlayModeBtn />
       <PrevBtn size={size} />
       <TogglePlayBtn size={size}/>
       <NextBtn size={size} />
+      <MusicAddBtn />
     </View>
   )
 }
@@ -110,7 +114,7 @@ const styles = createStyle({
     alignItems: 'center',
     flexGrow: 1,
     flexShrink: 1,
-    paddingHorizontal: '4%',
+    paddingHorizontal: '2%',
     paddingVertical: 22,
   },
   cotrolBtn: {
