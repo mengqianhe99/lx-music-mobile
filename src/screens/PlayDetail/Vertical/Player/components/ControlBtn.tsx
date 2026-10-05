@@ -5,10 +5,9 @@ import { playNext, playPrev, togglePlay } from '@/core/player/player'
 import { useIsPlay } from '@/store/player/hook'
 import { createStyle } from '@/utils/tools'
 import { useWindowSize } from '@/utils/hooks'
-import { BTN_WIDTH } from './MoreBtn/Btn'
 import PlayModeBtn from './MoreBtn/PlayModeBtn'
 import MusicAddBtn from './MoreBtn/MusicAddBtn'
-import { useMemo } from 'react'
+import { SkipIcon } from '../../LineIcons'
 
 const getOnPrimaryColor = (primary: string) => {
   const nums = primary.match(/\d+/g)
@@ -18,43 +17,27 @@ const getOnPrimaryColor = (primary: string) => {
   return luminance > 150 ? '#0B0B0F' : '#ffffff'
 }
 
-// 用色块画的上一首/下一首：一根竖线加一个三角形
-const SkipIcon = ({ dir, color, size }: { dir: 'prev' | 'next', color: string, size: number }) => {
-  const h = size * 0.5
-  const w = size * 0.42
-  const triangle = dir == 'next'
-    ? { borderLeftWidth: w, borderLeftColor: color, borderTopWidth: h / 2, borderBottomWidth: h / 2 }
-    : { borderRightWidth: w, borderRightColor: color, borderTopWidth: h / 2, borderBottomWidth: h / 2 }
-  const bar = <View style={{ width: 3, height: h, borderRadius: 2, backgroundColor: color }} />
-  const tri = <View style={{ width: 0, height: 0, borderColor: 'transparent', ...triangle }} />
-  return (
-    <View style={styles.skipIcon}>
-      {dir == 'prev' ? bar : null}
-      {tri}
-      {dir == 'next' ? bar : null}
-    </View>
-  )
-}
+const SKIP_SIZE = 56
 
-const PrevBtn = ({ size }: { size: number }) => {
+const PrevBtn = () => {
   const theme = useTheme()
   const handlePlayPrev = () => {
     void playPrev()
   }
   return (
-    <TouchableOpacity style={{ ...styles.cotrolBtn, width: size, height: size }} activeOpacity={0.5} onPress={handlePlayPrev}>
-      <SkipIcon dir="prev" color={theme['c-font']} size={size * 0.7} />
+    <TouchableOpacity style={styles.skipBtn} activeOpacity={0.5} onPress={handlePlayPrev}>
+      <SkipIcon dir="prev" color={theme['c-font']} size={34} />
     </TouchableOpacity>
   )
 }
-const NextBtn = ({ size }: { size: number }) => {
+const NextBtn = () => {
   const theme = useTheme()
   const handlePlayNext = () => {
     void playNext()
   }
   return (
-    <TouchableOpacity style={{ ...styles.cotrolBtn, width: size, height: size }} activeOpacity={0.5} onPress={handlePlayNext}>
-      <SkipIcon dir="next" color={theme['c-font']} size={size * 0.7} />
+    <TouchableOpacity style={styles.skipBtn} activeOpacity={0.5} onPress={handlePlayNext}>
+      <SkipIcon dir="next" color={theme['c-font']} size={34} />
     </TouchableOpacity>
   )
 }
@@ -62,71 +45,58 @@ const NextBtn = ({ size }: { size: number }) => {
 const TogglePlayBtn = ({ size }: { size: number }) => {
   const theme = useTheme()
   const isPlay = useIsPlay()
-  const circleSize = size * 1.05
   return (
     <TouchableOpacity
       style={{
-        ...styles.cotrolBtn,
         ...styles.playBtn,
-        width: circleSize,
-        height: circleSize,
-        borderRadius: circleSize / 2,
+        width: size,
+        height: size,
+        borderRadius: size / 2,
         backgroundColor: theme['c-primary'],
       }}
       activeOpacity={0.7}
       onPress={togglePlay}
     >
-      <Icon name={isPlay ? 'pause' : 'play'} color={getOnPrimaryColor(theme['c-primary'])} rawSize={circleSize * 0.45} />
+      <Icon name={isPlay ? 'pause' : 'play'} color={getOnPrimaryColor(theme['c-primary'])} rawSize={size * 0.42} />
     </TouchableOpacity>
   )
 }
 
-const MAX_SIZE = BTN_WIDTH * 1.6
-const MIN_SIZE = BTN_WIDTH * 1.2
-
 export default () => {
   const winSize = useWindowSize()
-  const maxHeight = Math.max(winSize.height * 0.11, MIN_SIZE)
-  const containerStyle = useMemo(() => {
-    return {
-      ...styles.conatiner,
-      maxHeight,
-    }
-  }, [maxHeight])
-  const size = Math.min(Math.max(winSize.width * 0.33 * global.lx.fontSize * 0.4, MIN_SIZE), MAX_SIZE, maxHeight)
+  const playSize = Math.min(winSize.width * 0.19, 84)
 
   return (
-    <View style={containerStyle}>
-      <PlayModeBtn />
-      <PrevBtn size={size} />
-      <TogglePlayBtn size={size}/>
-      <NextBtn size={size} />
-      <MusicAddBtn />
+    <View style={styles.container}>
+      <View style={styles.sideBtn}><PlayModeBtn /></View>
+      <PrevBtn />
+      <TogglePlayBtn size={playSize} />
+      <NextBtn />
+      <View style={styles.sideBtn}><MusicAddBtn /></View>
     </View>
   )
 }
 
 
 const styles = createStyle({
-  conatiner: {
+  container: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    flexGrow: 1,
-    flexShrink: 1,
-    paddingHorizontal: '2%',
-    paddingVertical: 22,
+    paddingVertical: 16,
   },
-  cotrolBtn: {
+  sideBtn: {
+    transform: [{ scale: 1.35 }],
+  },
+  skipBtn: {
+    width: SKIP_SIZE,
+    height: SKIP_SIZE,
     justifyContent: 'center',
     alignItems: 'center',
   },
   playBtn: {
-    elevation: 4,
-  },
-  skipIcon: {
-    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 2,
+    elevation: 4,
   },
 })
