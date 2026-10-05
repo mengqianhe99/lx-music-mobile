@@ -3,7 +3,7 @@ import { View } from 'react-native'
 // 所有线条图标统一粗细
 export const STROKE = 2.2
 
-// 画一条从 (x1,y1) 到 (x2,y2) 的圆头线段
+// 画一条从 (x1,y1) 到 (x2,y2) 的圆头线段，两头各延长半个线宽，转角处才能接实
 const Line = ({ x1, y1, x2, y2, color }: {
   x1: number
   y1: number
@@ -14,15 +14,16 @@ const Line = ({ x1, y1, x2, y2, color }: {
   const dx = x2 - x1
   const dy = y2 - y1
   const len = Math.sqrt(dx * dx + dy * dy)
+  const full = len + STROKE
   const angle = Math.atan2(dy, dx) * 180 / Math.PI
   const cx = (x1 + x2) / 2
   const cy = (y1 + y2) / 2
   return (
     <View style={{
       position: 'absolute',
-      left: cx - len / 2,
+      left: cx - full / 2,
       top: cy - STROKE / 2,
-      width: len,
+      width: full,
       height: STROKE,
       borderRadius: STROKE / 2,
       backgroundColor: color,
@@ -61,13 +62,12 @@ export const BackIcon = ({ color, size = 28 }: { color: string, size?: number })
   )
 }
 
-// 齿轮：圆环加 8 个齿，中间一个小圆环
+// 设置：细圆环加 8 个小齿
 export const GearIcon = ({ color, size = 30 }: { color: string, size?: number }) => {
   const c = size / 2
-  const ring = size * 0.58
-  const hole = size * 0.24
-  const toothW = size * 0.15
-  const toothH = size * 0.2
+  const ring = size * 0.52
+  const toothW = 3.6
+  const toothH = size * 0.17
   const r = ring / 2 + toothH / 2 - 1
   return (
     <View style={{ width: size, height: size }}>
@@ -78,16 +78,6 @@ export const GearIcon = ({ color, size = 30 }: { color: string, size?: number })
         width: ring,
         height: ring,
         borderRadius: ring / 2,
-        borderWidth: STROKE,
-        borderColor: color,
-      }} />
-      <View style={{
-        position: 'absolute',
-        left: c - hole / 2,
-        top: c - hole / 2,
-        width: hole,
-        height: hole,
-        borderRadius: hole / 2,
         borderWidth: STROKE,
         borderColor: color,
       }} />
@@ -154,7 +144,7 @@ export const CommentIcon = ({ color, size = 30 }: { color: string, size?: number
 }
 
 // 循环（one 为单曲循环，中间多一个 1）
-export const RepeatIcon = ({ color, size = 32, one = false }: { color: string, size?: number, one?: boolean }) => {
+export const RepeatIcon = ({ color, size = 28, one = false }: { color: string, size?: number, one?: boolean }) => {
   const k = size / 24
   return (
     <View style={{ width: size, height: size }}>
@@ -168,7 +158,7 @@ export const RepeatIcon = ({ color, size = 32, one = false }: { color: string, s
 }
 
 // 随机：两条交叉的线
-export const ShuffleIcon = ({ color, size = 32 }: { color: string, size?: number }) => {
+export const ShuffleIcon = ({ color, size = 28 }: { color: string, size?: number }) => {
   const k = size / 24
   return (
     <View style={{ width: size, height: size }}>
@@ -181,7 +171,7 @@ export const ShuffleIcon = ({ color, size = 32 }: { color: string, size?: number
 }
 
 // 顺序播放：三条横线，最下面一条带箭头
-export const ListOrderIcon = ({ color, size = 32 }: { color: string, size?: number }) => {
+export const ListOrderIcon = ({ color, size = 28 }: { color: string, size?: number }) => {
   const k = size / 24
   return (
     <View style={{ width: size, height: size }}>
@@ -194,7 +184,7 @@ export const ListOrderIcon = ({ color, size = 32 }: { color: string, size?: numb
 }
 
 // 单曲播放一次：箭头加终点竖线
-export const SingleIcon = ({ color, size = 32 }: { color: string, size?: number }) => {
+export const SingleIcon = ({ color, size = 28 }: { color: string, size?: number }) => {
   const k = size / 24
   return (
     <View style={{ width: size, height: size }}>
@@ -208,7 +198,7 @@ export const SingleIcon = ({ color, size = 32 }: { color: string, size?: number 
 // 收藏：线条爱心加右下角小加号，心形用公式取点连成
 const HEART_PTS: Pt[] = (() => {
   const pts: Pt[] = []
-  const n = 32
+  const n = 40
   for (let i = 0; i <= n; i++) {
     const t = (i / n) * Math.PI * 2
     const x = 16 * Math.pow(Math.sin(t), 3)
@@ -219,7 +209,7 @@ const HEART_PTS: Pt[] = (() => {
   return pts
 })()
 
-export const HeartPlusIcon = ({ color, size = 32 }: { color: string, size?: number }) => {
+export const HeartPlusIcon = ({ color, size = 28 }: { color: string, size?: number }) => {
   const k = size / 24
   return (
     <View style={{ width: size, height: size }}>
