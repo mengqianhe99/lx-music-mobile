@@ -32,7 +32,7 @@ export default ({ componentId }: { componentId: string }) => {
   })
 
   const style = useMemo(() => {
-    const imgWidth = Math.min(winWidth * 0.7, (winHeight - statusBarHeight - HEADER_HEIGHT) * 0.4)
+    const imgWidth = Math.min(winWidth * 0.73, (winHeight - statusBarHeight - HEADER_HEIGHT) * 0.4)
     return {
       width: imgWidth,
       height: imgWidth,
@@ -42,10 +42,8 @@ export default ({ componentId }: { componentId: string }) => {
 
   return (
     <View style={styles.container}>
-      <View style={{ ...styles.ring, borderColor: theme['c-primary-alpha-600'] }}>
-        <View style={{ ...styles.content, elevation: animated ? 6 : 0 }}>
-          <Image url={pic} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} style={style} />
-        </View>
+      <View style={{ ...styles.content, elevation: animated ? 6 : 0 }}>
+        <Image url={pic} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} style={style} />
       </View>
       <View style={styles.info}>
         <Text numberOfLines={1} size={22} color={theme['c-font']}>{musicInfo.name}</Text>
@@ -63,21 +61,16 @@ const styles = createStyle({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  ring: {
-    padding: 7,
-    borderRadius: COVER_RADIUS + 7,
-    borderWidth: 1,
-  },
   content: {
     backgroundColor: 'rgba(0,0,0,0)',
     borderRadius: COVER_RADIUS,
   },
   info: {
     width: '100%',
-    paddingHorizontal: 32,
-    marginTop: 20,
+    paddingHorizontal: 15,
+    marginTop: 22,
   },
   singer: {
-    marginTop: 2,
+    marginTop: 3,
   },
 })
