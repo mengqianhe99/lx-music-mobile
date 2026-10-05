@@ -46,8 +46,8 @@ export default ({ componentId }: { componentId: string }) => {
         <Image url={pic} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} style={style} />
       </View>
       <View style={styles.info}>
-        <Text numberOfLines={1} size={22} color={theme['c-font']}>{musicInfo.name}</Text>
-        <Text numberOfLines={1} size={14} color={theme['c-font-label']} style={styles.singer}>{musicInfo.singer}</Text>
+        <Text numberOfLines={1} size={24} color={theme['c-font']} style={styles.name}>{musicInfo.name}</Text>
+        <Text numberOfLines={1} size={15} color={theme['c-font-label']} style={styles.singer}>{musicInfo.singer}</Text>
       </View>
       <MiniLyric />
     </View>
@@ -67,10 +67,16 @@ const styles = createStyle({
   },
   info: {
     width: '100%',
-    paddingHorizontal: 26,
+    paddingHorizontal: 32,
     marginTop: 22,
+    alignItems: 'center',
+  },
+  name: {
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   singer: {
-    marginTop: 3,
+    marginTop: 4,
+    textAlign: 'center',
   },
 })
