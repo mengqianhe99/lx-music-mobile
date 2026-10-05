@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useState } from 'react'
 import { View, TouchableOpacity, TextInput } from 'react-native'
 import { useSettingValue } from '@/store/setting/hook'
 import { useTheme } from '@/store/theme/hook'
@@ -6,36 +6,18 @@ import { useTheme } from '@/store/theme/hook'
 import SubTitle from '../../components/SubTitle'
 import Text from '@/components/common/Text'
 import { createStyle } from '@/utils/tools'
-import { getAllThemes } from '@/theme/themes'
-import { CUSTOM_PRIMARY_ID, PRESET_PRIMARY_COLORS, applyCustomPrimary } from '@/theme/themes/customPrimary'
-
-const normalizeHex = (hex: string) => hex.trim().replace(/^#/, '').toLowerCase()
-
-// 'rgb(212, 185, 140)' -> '#d4b98c'
-const rgbToHex = (rgb: string) => {
-  const nums = rgb.match(/\d+/g)
-  if (!nums || nums.length < 3) return null
-  return '#' + nums.slice(0, 3).map(n => Number(n).toString(16).padStart(2, '0')).join('')
-}
+import { PRESET_PRIMARY_COLORS, isCustomPrimaryId, normalizeHex, parseCustomThemeId } from '@/theme/themes/customTheme'
+import { applyCustomPrimary } from '@/theme/themes/customPrimary'
 
 export default memo(() => {
   const theme = useTheme()
   const activeId = useSettingValue('theme.id')
-  const isActive = activeId == CUSTOM_PRIMARY_ID
-  const [hex, setHex] = useState<string>(PRESET_PRIMARY_COLORS[0].hex)
-  const [isDark, setIsDark] = useState(theme.isDark)
+  const isActive = isCustomPrimaryId(activeId)
+  // 用过自定义主色的话，从当前主题 id 回填颜色和模式
+  const saved = parseCustomThemeId(activeId)
+  const [hex, setHex] = useState<string>(saved ? saved.hex.toUpperCase() : PRESET_PRIMARY_COLORS[0].hex)
+  const [isDark, setIsDark] = useState(saved ? saved.isDark : theme.isDark)
   const [error, setError] = useState(false)
-
-  // 用过自定义主色的话，回填上次的颜色和模式
-  useEffect(() => {
-    void getAllThemes().then(({ userThemes }) => {
-      const saved = userThemes.find(t => t.id == CUSTOM_PRIMARY_ID)
-      if (!saved) return
-      const savedHex = rgbToHex(saved.config.themeColors['c-primary'])
-      if (savedHex) setHex(savedHex)
-      setIsDark(saved.isDark)
-    })
-  }, [])
 
   const apply = useCallback(async(nextHex: string, nextDark: boolean) => {
     const id = await applyCustomPrimary(nextHex, nextDark)
