@@ -20,8 +20,8 @@ const styles = createStyle({
   container: {
     flex: 0,
     width: '100%',
-    paddingHorizontal: 26,
-    paddingBottom: 28,
+    paddingHorizontal: 40,
+    paddingBottom: 64,
     paddingTop: 5,
     flexDirection: 'column',
   },
