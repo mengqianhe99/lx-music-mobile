@@ -20,7 +20,7 @@ const styles = createStyle({
   container: {
     flex: 0,
     width: '100%',
-    paddingHorizontal: 15,
+    paddingHorizontal: 26,
     paddingBottom: 28,
     paddingTop: 5,
     flexDirection: 'column',
