@@ -17,9 +17,9 @@ export default memo(() => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.line} numberOfLines={1} size={13} color={theme['c-font-label']}>{prev}</Text>
-      <Text style={{ ...styles.line, ...styles.current }} numberOfLines={1} size={17} color={theme['c-primary']}>{current}</Text>
-      <Text style={styles.line} numberOfLines={1} size={13} color={theme['c-font-label']}>{next}</Text>
+      <Text style={styles.line} numberOfLines={1} size={14} color={theme['c-font-label']}>{prev}</Text>
+      <Text style={{ ...styles.line, ...styles.current }} numberOfLines={1} size={18} color={theme['c-primary']}>{current}</Text>
+      <Text style={styles.line} numberOfLines={1} size={14} color={theme['c-font-label']}>{next}</Text>
     </View>
   )
 })
@@ -28,7 +28,7 @@ const styles = createStyle({
   container: {
     width: '100%',
     paddingHorizontal: 24,
-    marginTop: 18,
+    marginTop: 26,
     alignItems: 'center',
   },
   line: {
@@ -36,7 +36,8 @@ const styles = createStyle({
     textAlign: 'center',
   },
   current: {
-    minHeight: 40,
+    minHeight: 42,
     paddingTop: 6,
+    fontWeight: 'bold',
   },
 })
