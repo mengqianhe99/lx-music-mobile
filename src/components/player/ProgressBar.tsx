@@ -94,7 +94,7 @@ const Progress = ({ progress, duration, buffered }: {
 
 
 const progressContentPadding = 10
-const progressHeight = 6
+const progressHeight = 8
 const progressContentHeight = progressContentPadding * 2 + progressHeight
 const styles = createStyle({
   progress: {
