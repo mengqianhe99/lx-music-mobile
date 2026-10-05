@@ -12,8 +12,8 @@ export default ({ icon, color, onPress }: {
   onPress: () => void
 }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={{ ...styles.button, width: HEADER_HEIGHT }}>
-      <Icon name={icon} color={color} size={18} />
+    <TouchableOpacity onPress={onPress} style={{ ...styles.button, width: Math.max(HEADER_HEIGHT, 48) }}>
+      <Icon name={icon} color={color} size={28} />
     </TouchableOpacity>
   )
 }
