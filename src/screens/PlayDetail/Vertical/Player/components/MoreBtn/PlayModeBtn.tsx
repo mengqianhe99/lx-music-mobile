@@ -1,13 +1,16 @@
 import { memo, useMemo } from 'react'
+import { TouchableOpacity } from 'react-native'
 import { toast } from '@/utils/tools'
 import { MUSIC_TOGGLE_MODE_LIST, MUSIC_TOGGLE_MODE } from '@/config/constant'
 import { useSettingValue } from '@/store/setting/hook'
 import { useI18n } from '@/lang'
 import { updateSetting } from '@/core/common'
-import Btn from './Btn'
+import { useTheme } from '@/store/theme/hook'
+import { RepeatIcon, ShuffleIcon, ListOrderIcon, SingleIcon } from '../../../LineIcons'
 
 
 export default memo(() => {
+  const theme = useTheme()
   const togglePlayMethod = useSettingValue('player.togglePlayMethod')
   const t = useI18n()
 
@@ -37,27 +40,29 @@ export default memo(() => {
     toast(t(modeName))
   }
 
-  const playModeIcon = useMemo(() => {
-    let playModeIcon = null
+  const icon = useMemo(() => {
+    const color = theme['c-font']
     switch (togglePlayMethod) {
       case MUSIC_TOGGLE_MODE.listLoop:
-        playModeIcon = 'list-loop'
-        break
+        return <RepeatIcon color={color} />
       case MUSIC_TOGGLE_MODE.random:
-        playModeIcon = 'list-random'
-        break
+        return <ShuffleIcon color={color} />
       case MUSIC_TOGGLE_MODE.list:
-        playModeIcon = 'list-order'
-        break
+        return <ListOrderIcon color={color} />
       case MUSIC_TOGGLE_MODE.singleLoop:
-        playModeIcon = 'single-loop'
-        break
+        return <RepeatIcon color={color} one />
       default:
-        playModeIcon = 'single'
-        break
+        return <SingleIcon color={color} />
     }
-    return playModeIcon
-  }, [togglePlayMethod])
+  }, [togglePlayMethod, theme])
 
-  return <Btn icon={playModeIcon} onPress={toggleNextPlayMode} />
+  return (
+    <TouchableOpacity
+      style={{ width: 52, height: 52, alignItems: 'center', justifyContent: 'center' }}
+      activeOpacity={0.5}
+      onPress={toggleNextPlayMode}
+    >
+      {icon}
+    </TouchableOpacity>
+  )
 })
