@@ -11,6 +11,7 @@ import SettingPopup, { type SettingPopupType } from '../../components/SettingPop
 import { useStatusbarHeight } from '@/store/common/hook'
 import Btn from './Btn'
 import TimeoutExitBtn from './TimeoutExitBtn'
+import { SettingBtn } from './HeaderIcons'
 
 export const HEADER_HEIGHT = scaleSizeH(_HEADER_HEIGHT)
 
@@ -32,7 +33,7 @@ export default memo(() => {
         <Btn icon="chevron-left" onPress={back} />
         <View style={styles.spacer} />
         <TimeoutExitBtn />
-        <Btn icon="slider" onPress={showSetting} />
+        <SettingBtn onPress={showSetting} />
       </View>
       <SettingPopup ref={popupRef} direction="vertical" />
     </View>
