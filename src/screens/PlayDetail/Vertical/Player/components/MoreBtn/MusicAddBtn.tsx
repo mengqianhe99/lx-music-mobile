@@ -1,10 +1,13 @@
 import { useRef } from 'react'
+import { TouchableOpacity } from 'react-native'
 import MusicAddModal, { type MusicAddModalType } from '@/components/MusicAddModal'
 import playerState from '@/store/player/state'
-import Btn from './Btn'
+import { useTheme } from '@/store/theme/hook'
+import { HeartPlusIcon } from '../../../LineIcons'
 
 
 export default () => {
+  const theme = useTheme()
   const musicAddModalRef = useRef<MusicAddModalType>(null)
 
   const handleShowMusicAddModal = () => {
@@ -19,7 +22,13 @@ export default () => {
 
   return (
     <>
-      <Btn icon="add-music" onPress={handleShowMusicAddModal} />
+      <TouchableOpacity
+        style={{ width: 52, height: 52, alignItems: 'center', justifyContent: 'center' }}
+        activeOpacity={0.5}
+        onPress={handleShowMusicAddModal}
+      >
+        <HeartPlusIcon color={theme['c-font']} />
+      </TouchableOpacity>
       <MusicAddModal ref={musicAddModalRef} />
     </>
   )
