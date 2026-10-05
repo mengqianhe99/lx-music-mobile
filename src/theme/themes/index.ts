@@ -6,6 +6,7 @@ import themeState from '@/store/theme/state'
 import { isUrl } from '@/utils'
 import { privateStorageDirectoryPath } from '@/utils/fs'
 import { type ImageSourcePropType } from 'react-native'
+import { buildCustomPrimaryTheme, parseCustomThemeId } from './customTheme'
 
 export const BG_IMAGES = {
   'china_ink.jpg': require('./images/china_ink.jpg') as ImageSourcePropType,
@@ -97,32 +98,19 @@ export const buildActiveThemeColors = (theme: LX.Theme): LX.ActiveTheme => {
 }
 
 
-// const copyTheme = (theme: LX.Theme): LX.Theme => {
-//   return {
-//     ...theme,
-//     config: {
-//       ...theme.config,
-//       extInfo: { ...theme.config.extInfo },
-//       themeColors: { ...theme.config.themeColors },
-//     },
-//   }
-// }
-// type IDS = LocalTheme['id']
 export const getTheme = async() => {
-  // fs.promises.readdir()
   const shouldUseDarkColors = themeState.shouldUseDarkColors
-  // let themeId = settingState.setting['theme.id'] == 'auto'
-  //   ? shouldUseDarkColors
-  //     ? settingState.setting['theme.darkId']
-  //     : settingState.setting['theme.lightId']
-  //   // : 'china_ink'
-  //   : settingState.setting['theme.id']
   let themeId = settingState.setting['common.isAutoTheme'] && shouldUseDarkColors
     ? 'black'
     : settingState.setting['theme.id']
-  // themeId = 'naruto'
-  // themeId = 'pink'
-  // themeId = 'black'
+
+  // 自定义主色：颜色和深浅都写在 id 里，直接还原，不依赖本地存储的用户主题
+  const custom = parseCustomThemeId(themeId)
+  if (custom) {
+    const customTheme = buildCustomPrimaryTheme(custom.hex, custom.isDark)
+    if (customTheme) return customTheme
+  }
+
   let theme: LocalTheme | LX.Theme | undefined = themes.find(theme => theme.id == themeId)
   if (!theme) {
     userThemes = await getUserTheme()
