@@ -10,7 +10,7 @@ import commonState from '@/store/common/state'
 import SettingPopup, { type SettingPopupType } from '../../components/SettingPopup'
 import { useStatusbarHeight } from '@/store/common/hook'
 import Btn from './Btn'
-import TimeoutExitBtn from './TimeoutExitBtn'
+import CommentBtn from '../Player/components/MoreBtn/CommentBtn'
 import { SettingBtn } from './HeaderIcons'
 
 export const HEADER_HEIGHT = scaleSizeH(_HEADER_HEIGHT)
@@ -32,7 +32,9 @@ export default memo(() => {
       <View style={styles.container}>
         <Btn icon="chevron-left" onPress={back} />
         <View style={styles.spacer} />
-        <TimeoutExitBtn />
+        <View style={styles.commentWrap}>
+          <CommentBtn />
+        </View>
         <SettingBtn onPress={showSetting} />
       </View>
       <SettingPopup ref={popupRef} direction="vertical" />
@@ -48,5 +50,11 @@ const styles = StyleSheet.create({
   },
   spacer: {
     flex: 1,
+  },
+  commentWrap: {
+    width: 48,
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 })
