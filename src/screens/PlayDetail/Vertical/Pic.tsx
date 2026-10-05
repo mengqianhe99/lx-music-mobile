@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
 import { View } from 'react-native'
-// import { useLayout } from '@/utils/hooks'
 import { createStyle } from '@/utils/tools'
 import { usePlayerMusicInfo } from '@/store/player/hook'
 import { useWindowSize } from '@/utils/hooks'
@@ -8,9 +7,11 @@ import { NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 import { useNavigationComponentDidAppear } from '@/navigation'
 import { HEADER_HEIGHT } from './components/Header'
 import Image from '@/components/common/Image'
+import Text from '@/components/common/Text'
 import { useStatusbarHeight } from '@/store/common/hook'
 import commonState from '@/store/common/state'
 import { useTheme } from '@/store/theme/hook'
+import MiniLyric from './MiniLyric'
 
 const COVER_RADIUS = 28
 
@@ -31,7 +32,7 @@ export default ({ componentId }: { componentId: string }) => {
   })
 
   const style = useMemo(() => {
-    const imgWidth = Math.min(winWidth * 0.78, (winHeight - statusBarHeight - HEADER_HEIGHT) * 0.5)
+    const imgWidth = Math.min(winWidth * 0.7, (winHeight - statusBarHeight - HEADER_HEIGHT) * 0.4)
     return {
       width: imgWidth,
       height: imgWidth,
@@ -46,6 +47,11 @@ export default ({ componentId }: { componentId: string }) => {
           <Image url={pic} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} style={style} />
         </View>
       </View>
+      <View style={styles.info}>
+        <Text numberOfLines={1} size={22} color={theme['c-font']}>{musicInfo.name}</Text>
+        <Text numberOfLines={1} size={14} color={theme['c-font-label']} style={styles.singer}>{musicInfo.singer}</Text>
+      </View>
+      <MiniLyric />
     </View>
   )
 }
@@ -65,5 +71,13 @@ const styles = createStyle({
   content: {
     backgroundColor: 'rgba(0,0,0,0)',
     borderRadius: COVER_RADIUS,
+  },
+  info: {
+    width: '100%',
+    paddingHorizontal: 32,
+    marginTop: 20,
+  },
+  singer: {
+    marginTop: 2,
   },
 })
