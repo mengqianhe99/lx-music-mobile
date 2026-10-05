@@ -67,7 +67,7 @@ const styles = createStyle({
   },
   info: {
     width: '100%',
-    paddingHorizontal: 15,
+    paddingHorizontal: 26,
     marginTop: 22,
   },
   singer: {
