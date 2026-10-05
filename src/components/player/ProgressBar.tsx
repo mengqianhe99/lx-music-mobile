@@ -10,14 +10,14 @@ import { Icon } from '@/components/common/Icon'
 
 const DefaultBar = memo(() => {
   const theme = useTheme()
+  const color = theme.isDark ? 'rgba(255, 255, 255, 0.1)' : theme['c-primary-alpha-800']
 
-  return <View style={{ ...styles.progressBar, backgroundColor: theme['c-primary-light-300-alpha-800'], position: 'absolute', width: '100%', left: 0, top: 0 }}></View>
+  return <View style={{ ...styles.progressBar, backgroundColor: color, position: 'absolute', width: '100%', left: 0, top: 0 }}></View>
 })
 
 const BufferedBar = memo(({ progress }: { progress: number }) => {
-  // console.log(bufferedProgress)
   const theme = useTheme()
-  return <View style={{ ...styles.progressBar, backgroundColor: theme['c-primary-light-400-alpha-700'], position: 'absolute', width: `${progress * 100}%`, left: 0, top: 0 }}></View>
+  return <View style={{ ...styles.progressBar, backgroundColor: theme['c-primary-alpha-600'], position: 'absolute', width: `${progress * 100}%`, left: 0, top: 0 }}></View>
 })
 
 
@@ -32,29 +32,21 @@ const PreassBar = memo(({ onDragState, setDragProgress, onSetProgress }: {
     onDragEnd,
     onDrag,
   } = useDrag(onSetProgress, onDragState, setDragProgress)
-  // const handlePress = useCallback((event: GestureResponderEvent) => {
-  //   onPress(event.nativeEvent.locationX)
-  // }, [onPress])
 
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
 
-      // onMoveShouldSetPanResponder: () => true,
       onPanResponderMove: (evt, gestureState) => {
         onDrag(gestureState.dx)
       },
       onPanResponderGrant: (evt, gestureState) => {
-        // console.log(evt.nativeEvent.locationX, gestureState)
         onDragStart(gestureState.dx, evt.nativeEvent.locationX)
       },
       onPanResponderRelease: () => {
         onDragEnd()
       },
-      // onPanResponderTerminate: (evt, gestureState) => {
-      //   onDragEnd()
-      // },
     }),
   ).current
 
@@ -67,11 +59,9 @@ const Progress = ({ progress, duration, buffered }: {
   duration: number
   buffered: number
 }) => {
-  // const { progress: bufferProgress } = usePlayTimeBuffer()
   const theme = useTheme()
   const [draging, setDraging] = useState(false)
   const [dragProgress, setDragProgress] = useState(0)
-  // console.log(progress)
   const progressStr: `${number}%` = `${progress * 100}%`
 
   const progressDotStyle = useMemo(() => {
@@ -100,36 +90,34 @@ const Progress = ({ progress, duration, buffered }: {
           draging
             ? (
                 <>
-                  <View style={{ ...styles.progressBar, backgroundColor: theme['c-primary-light-100-alpha-700'], width: progressStr, position: 'absolute', left: 0, top: 0 }} />
-                  <View style={{ ...styles.progressBar, backgroundColor: theme['c-primary-light-100-alpha-600'], width: `${dragProgress * 100}%`, position: 'absolute', left: 0, top: 0 }}>
-                    <Icon name="full_stop" color={theme['c-primary-light-100']} rawSize={progressDotSize} style={progressDotStyle} />
+                  <View style={{ ...styles.progressBar, backgroundColor: theme['c-primary-alpha-500'], width: progressStr, position: 'absolute', left: 0, top: 0 }} />
+                  <View style={{ ...styles.progressBar, backgroundColor: theme['c-primary'], width: `${dragProgress * 100}%`, position: 'absolute', left: 0, top: 0 }}>
+                    <Icon name="full_stop" color={theme['c-primary']} rawSize={progressDotSize} style={progressDotStyle} />
                   </View>
                 </>
               ) : (
-                <View style={{ ...styles.progressBar, backgroundColor: theme['c-primary-light-100-alpha-400'], width: progressStr, position: 'absolute', left: 0, top: 0 }}>
-                  <Icon name="full_stop" color={theme['c-primary-light-100']} rawSize={progressDotSize} style={progressDotStyle} />
+                <View style={{ ...styles.progressBar, backgroundColor: theme['c-primary'], width: progressStr, position: 'absolute', left: 0, top: 0 }}>
+                  <Icon name="full_stop" color={theme['c-primary']} rawSize={progressDotSize} style={progressDotStyle} />
                 </View>
               )
         }
 
       </View>
       <PreassBar onDragState={setDraging} setDragProgress={setDragProgress} onSetProgress={onSetProgress} />
-      {/* <View style={{ ...styles.progressBar, height: '100%', width: progressStr }}><Pressable style={styles.progressDot}></Pressable></View> */}
     </View>
   )
 }
 
 
 const progressContentPadding = 10
-const progressHeight = 3.6
+const progressHeight = 2.5
 const progressContentHeight = progressContentPadding * 2 + progressHeight
 const progressHeightSize = scaleSizeH(progressHeight)
-let progressDotSize = scaleSizeW(progressContentHeight * 0.8)
+let progressDotSize = scaleSizeW(progressContentHeight * 0.7)
 const styles = createStyle({
   progress: {
     width: '100%',
     height: progressContentHeight,
-    // backgroundColor: 'rgba(0,0,0,0.5)',
     paddingTop: progressContentPadding,
     paddingBottom: progressContentPadding,
     zIndex: 1,
@@ -140,7 +128,6 @@ const styles = createStyle({
   },
   pressBar: {
     position: 'absolute',
-    // backgroundColor: 'rgba(0,0,0,0.5)',
     left: 0,
     top: 0,
     height: progressContentHeight,
