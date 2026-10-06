@@ -11,7 +11,8 @@ import commonState from '@/store/common/state'
 import SettingPopup, { type SettingPopupType } from '../../components/SettingPopup'
 import { useStatusbarHeight } from '@/store/common/hook'
 import CommentBtn from '../Player/components/MoreBtn/CommentBtn'
-import { BackIcon, GearIcon } from '../LineIcons'
+import { BackIcon } from '../LineIcons'
+import { Icon } from '@/components/common/Icon'
 
 export const HEADER_HEIGHT = scaleSizeH(_HEADER_HEIGHT)
 
@@ -36,12 +37,10 @@ export default memo(() => {
         </TouchableOpacity>
         <View style={styles.spacer} />
         <View style={styles.iconBtn}>
-          <View style={styles.commentScale}>
-            <CommentBtn />
-          </View>
+          <CommentBtn />
         </View>
         <TouchableOpacity style={styles.iconBtn} activeOpacity={0.5} onPress={showSetting}>
-          <GearIcon color={theme['c-font']} />
+          <Icon name="gear" color={theme['c-font']} rawSize={28} />
         </TouchableOpacity>
       </View>
       <SettingPopup ref={popupRef} direction="vertical" />
@@ -63,8 +62,5 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  commentScale: {
-    transform: [{ scale: 1.2 }],
   },
 })
