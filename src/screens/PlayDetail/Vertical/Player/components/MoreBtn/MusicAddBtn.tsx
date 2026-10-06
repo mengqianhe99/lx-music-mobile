@@ -3,7 +3,7 @@ import { TouchableOpacity } from 'react-native'
 import MusicAddModal, { type MusicAddModalType } from '@/components/MusicAddModal'
 import playerState from '@/store/player/state'
 import { useTheme } from '@/store/theme/hook'
-import { HeartPlusIcon } from '../../../LineIcons'
+import { Icon } from '@/components/common/Icon'
 
 
 export default () => {
@@ -27,7 +27,7 @@ export default () => {
         activeOpacity={0.5}
         onPress={handleShowMusicAddModal}
       >
-        <HeartPlusIcon color={theme['c-font']} />
+        <Icon name="list_plus" color={theme['c-font']} rawSize={28} />
       </TouchableOpacity>
       <MusicAddModal ref={musicAddModalRef} />
     </>
