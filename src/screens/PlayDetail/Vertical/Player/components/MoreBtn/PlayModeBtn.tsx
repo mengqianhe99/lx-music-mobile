@@ -6,7 +6,7 @@ import { useSettingValue } from '@/store/setting/hook'
 import { useI18n } from '@/lang'
 import { updateSetting } from '@/core/common'
 import { useTheme } from '@/store/theme/hook'
-import { RepeatIcon, ShuffleIcon, ListOrderIcon, SingleIcon } from '../../../LineIcons'
+import { Icon } from '@/components/common/Icon'
 
 
 export default memo(() => {
@@ -40,21 +40,20 @@ export default memo(() => {
     toast(t(modeName))
   }
 
-  const icon = useMemo(() => {
-    const color = theme['c-font']
+  const iconName = useMemo(() => {
     switch (togglePlayMethod) {
       case MUSIC_TOGGLE_MODE.listLoop:
-        return <RepeatIcon color={color} />
+        return 'list-loop'
       case MUSIC_TOGGLE_MODE.random:
-        return <ShuffleIcon color={color} />
+        return 'list-random'
       case MUSIC_TOGGLE_MODE.list:
-        return <ListOrderIcon color={color} />
+        return 'list-order'
       case MUSIC_TOGGLE_MODE.singleLoop:
-        return <RepeatIcon color={color} one />
+        return 'single-loop'
       default:
-        return <SingleIcon color={color} />
+        return 'single'
     }
-  }, [togglePlayMethod, theme])
+  }, [togglePlayMethod])
 
   return (
     <TouchableOpacity
@@ -62,7 +61,7 @@ export default memo(() => {
       activeOpacity={0.5}
       onPress={toggleNextPlayMode}
     >
-      {icon}
+      <Icon name={iconName} color={theme['c-font']} size={26} />
     </TouchableOpacity>
   )
 })
