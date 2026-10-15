@@ -7,8 +7,6 @@ import { Icon } from '@/components/common/Icon'
 import { confirmDialog, createStyle, exitApp as backHome } from '@/utils/tools'
 import { NAV_MENUS } from '@/config/constant'
 import type { InitState } from '@/store/common/state'
-// import { navigations } from '@/navigation'
-// import commonState from '@/store/common/state'
 import { exitApp, setNavActiveId } from '@/core/common'
 import Text from '@/components/common/Text'
 import { useSettingValue } from '@/store/setting/hook'
@@ -16,44 +14,48 @@ import { useSettingValue } from '@/store/setting/hook'
 const styles = createStyle({
   container: {
     flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // padding: 10,
   },
   header: {
-    paddingTop: 40,
-    paddingBottom: 50,
-    flexDirection: 'row',
+    paddingTop: 36,
+    paddingBottom: 36,
+    paddingHorizontal: 28,
     justifyContent: 'center',
-    alignItems: 'center',
   },
   headerText: {
-    textAlign: 'center',
-    marginLeft: 16,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  headerSub: {
+    marginTop: 4,
   },
   menus: {
     flex: 1,
   },
   list: {
-    paddingTop: 10,
+    paddingTop: 6,
     paddingBottom: 10,
+    paddingHorizontal: 14,
   },
   menuItem: {
     flexDirection: 'row',
-    paddingTop: 13,
-    paddingBottom: 13,
-    paddingLeft: 25,
-    paddingRight: 25,
+    paddingTop: 14,
+    paddingBottom: 14,
+    paddingLeft: 16,
+    paddingRight: 16,
+    marginBottom: 4,
+    borderRadius: 14,
     alignItems: 'center',
-    // backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
   iconContent: {
-    width: 24,
+    width: 28,
     alignItems: 'center',
   },
   text: {
-    paddingLeft: 20,
-    // fontWeight: '500',
+    paddingLeft: 16,
+  },
+  footer: {
+    paddingHorizontal: 14,
+    paddingBottom: 14,
   },
 })
 
@@ -61,10 +63,10 @@ const Header = () => {
   const theme = useTheme()
   const statusBarHeight = useStatusbarHeight()
   return (
-    <View style={{ paddingTop: statusBarHeight, backgroundColor: theme['c-primary-light-700-alpha-500'] }}>
+    <View style={{ paddingTop: statusBarHeight }}>
       <View style={styles.header}>
-        <Icon name="logo" color={theme['c-primary-dark-100-alpha-300']} size={28} />
-        <Text style={styles.headerText} size={28} color={theme['c-primary-dark-100-alpha-300']}>LX Music</Text>
+        <Text style={styles.headerText} size={26} color={theme['c-font']}>LX Music</Text>
+        <Text style={styles.headerSub} size={12} color={theme['c-font-label']}>moomusic</Text>
       </View>
     </View>
   )
@@ -82,23 +84,22 @@ const MenuItem = ({ id, icon, onPress }: {
   const theme = useTheme()
 
   return activeId == id
-    ? <View style={styles.menuItem}>
+    ? <View style={{ ...styles.menuItem, backgroundColor: theme['c-primary-alpha-900'] }}>
         <View style={styles.iconContent}>
-          <Icon name={icon} size={20} color={theme['c-primary-font-active']} />
+          <Icon name={icon} rawSize={24} color={theme['c-primary']} />
         </View>
-        <Text style={styles.text} color={theme['c-primary-font']}>{t(id)}</Text>
+        <Text style={styles.text} size={16} color={theme['c-primary']}>{t(id)}</Text>
       </View>
-    : <TouchableOpacity style={styles.menuItem} onPress={() => { onPress(id) }}>
+    : <TouchableOpacity style={styles.menuItem} activeOpacity={0.5} onPress={() => { onPress(id) }}>
         <View style={styles.iconContent}>
-          <Icon name={icon} size={20} color={theme['c-font-label']} />
+          <Icon name={icon} rawSize={24} color={theme['c-font-label']} />
         </View>
-        <Text style={styles.text}>{t(id)}</Text>
+        <Text style={styles.text} size={16} color={theme['c-font']}>{t(id)}</Text>
       </TouchableOpacity>
 }
 
 export default memo(() => {
   const theme = useTheme()
-  // console.log('render drawer nav')
   const showBackBtn = useSettingValue('common.showBackBtn')
   const showExitBtn = useSettingValue('common.showExitBtn')
 
@@ -132,13 +133,14 @@ export default memo(() => {
         </View>
       </ScrollView>
 
-      {
-        showBackBtn ? <MenuItem id="back_home" icon="home" onPress={handlePress} /> : null
-      }
-      {
-        showExitBtn ? <MenuItem id="nav_exit" icon="exit2" onPress={handlePress} /> : null
-      }
+      <View style={styles.footer}>
+        {
+          showBackBtn ? <MenuItem id="back_home" icon="home" onPress={handlePress} /> : null
+        }
+        {
+          showExitBtn ? <MenuItem id="nav_exit" icon="exit2" onPress={handlePress} /> : null
+        }
+      </View>
     </View>
   )
 })
-
