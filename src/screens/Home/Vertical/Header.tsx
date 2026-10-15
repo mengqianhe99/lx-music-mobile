@@ -19,13 +19,8 @@ const headerComponents: Partial<Record<CommonState['navActiveId'], React.ReactNo
   nav_search: <SearchTypeSelector />,
 }
 
+const MENU_ICON_SIZE = 28
 
-// const LeftTitle = () => {
-//   const id = useNavActiveId()
-//   const t = useI18n()
-
-//   return <Text style={styles.leftTitle} size={18}>{t(id)}</Text>
-// }
 const LeftHeader = () => {
   const theme = useTheme()
   const id = useNavActiveId()
@@ -43,29 +38,19 @@ const LeftHeader = () => {
       paddingTop: statusBarHeight,
     }}>
       <View style={styles.left}>
-        <TouchableOpacity style={styles.btn} onPress={openMenu}>
-          <Icon color={theme['c-font']} name="menu" size={18} />
+        <TouchableOpacity style={styles.btn} activeOpacity={0.5} onPress={openMenu}>
+          <Icon color={theme['c-font']} name="menu" rawSize={MENU_ICON_SIZE} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.titleBtn} onPress={openMenu}>
-          <Text style={styles.leftTitle} size={18}>{t(id)}</Text>
+        <TouchableOpacity style={styles.titleBtn} activeOpacity={0.5} onPress={openMenu}>
+          <Text style={{ ...styles.title, ...styles.leftTitle }} size={22} color={theme['c-font']}>{t(id)}</Text>
         </TouchableOpacity>
       </View>
       {headerComponents[id] ?? null}
-
-      {/* <TouchableOpacity style={styles.btn} onPress={openSetting}>
-        <Icon style={{ ...styles.btnText, color: theme['c-font'] }} name="setting" size={styles.btnText.fontSize} />
-      </TouchableOpacity> */}
     </View>
   )
 }
 
 
-// const RightTitle = () => {
-//   const id = useNavActiveId()
-//   const t = useI18n()
-
-//   return <Text style={styles.rightTitle} size={18}>{t(id)}</Text>
-// }
 const RightHeader = () => {
   const theme = useTheme()
   const t = useI18n()
@@ -82,17 +67,14 @@ const RightHeader = () => {
       paddingTop: statusBarHeight,
     }}>
       <View style={styles.left}>
-        <TouchableOpacity style={styles.titleBtn} onPress={openMenu}>
-          <Text style={styles.rightTitle} size={18}>{t(id)}</Text>
+        <TouchableOpacity style={styles.titleBtn} activeOpacity={0.5} onPress={openMenu}>
+          <Text style={{ ...styles.title, ...styles.rightTitle }} size={22} color={theme['c-font']}>{t(id)}</Text>
         </TouchableOpacity>
       </View>
       {headerComponents[id] ?? null}
-      <TouchableOpacity style={styles.btn} onPress={openMenu}>
-        <Icon color={theme['c-font']} name="menu" size={18} />
+      <TouchableOpacity style={styles.btn} activeOpacity={0.5} onPress={openMenu}>
+        <Icon color={theme['c-font']} name="menu" rawSize={MENU_ICON_SIZE} />
       </TouchableOpacity>
-      {/* <TouchableOpacity style={styles.btn} onPress={openSetting}>
-        <Icon style={{ ...styles.btnText, color: theme['c-font'] }} name="setting" size={styles.btnText.fontSize} />
-      </TouchableOpacity> */}
     </View>
   )
 }
@@ -116,12 +98,10 @@ const Header = () => {
 
 const styles = createStyle({
   container: {
-    // width: '100%',
     paddingRight: 5,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'rgba(0,0,0,0.1)',
     zIndex: 10,
   },
   left: {
@@ -132,21 +112,22 @@ const styles = createStyle({
     height: '100%',
   },
   btn: {
-    // flex: 1,
-    width: HEADER_HEIGHT,
-    // backgroundColor: 'rgba(0,0,0,0.1)',
+    width: Math.max(HEADER_HEIGHT, 48),
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',
   },
   titleBtn: {
     flex: 1,
-    // backgroundColor: 'rgba(0,0,0,0.1)',
     height: '100%',
     justifyContent: 'center',
   },
+  title: {
+    fontWeight: 'bold',
+    letterSpacing: 0.5,
+  },
   leftTitle: {
-    paddingLeft: 14,
+    paddingLeft: 6,
     paddingRight: 16,
   },
   rightTitle: {
