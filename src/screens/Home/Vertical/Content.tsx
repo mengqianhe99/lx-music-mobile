@@ -1,60 +1,53 @@
 import { useEffect, useRef } from 'react'
-// import { getWindowSise, onDimensionChange } from '@/utils/tools'
-import DrawerNav from './DrawerNav'
+import { View, StyleSheet } from 'react-native'
 import Header from './Header'
 import Main from './Main'
-import { useSettingValue } from '@/store/setting/hook'
-import { COMPONENT_IDS } from '@/config/constant'
-import DrawerLayoutFixed, { type DrawerLayoutFixedType } from '@/components/common/DrawerLayoutFixed'
-import { scaleSizeW } from '@/utils/pixelRatio'
-
-const MAX_WIDTH = scaleSizeW(300)
+import Dashboard from './Dashboard'
+import { useNavActiveId } from '@/store/common/hook'
+import { useTheme } from '@/store/theme/hook'
+import { setHomeTab, useHomeTab } from './homeTab'
 
 const Content = () => {
-  const drawer = useRef<DrawerLayoutFixedType>(null)
-  const drawerLayoutPosition = useSettingValue('common.drawerLayoutPosition')
+  const theme = useTheme()
+  const navId = useNavActiveId()
+  const tab = useHomeTab()
+  const firstRef = useRef(true)
 
+  // 别处切换了板块（比如长按迷你播放条跳到列表），首页覆盖层要让开
   useEffect(() => {
-    const changeVisible = (visible: boolean) => {
-      if (visible) {
-        drawer.current?.openDrawer()
-      } else {
-        drawer.current?.closeDrawer()
-      }
+    if (firstRef.current) {
+      firstRef.current = false
+      return
     }
-
-    global.app_event.on('changeMenuVisible', changeVisible)
-
-    return () => {
-      global.app_event.off('changeMenuVisible', changeVisible)
-    }
-  }, [])
-
-  const navigationView = () => <DrawerNav />
-  // console.log('render drawer content')
+    setHomeTab(navId)
+  }, [navId])
 
   return (
-    <DrawerLayoutFixed
-      ref={drawer}
-      widthPercentage={0.7}
-      widthPercentageMax={MAX_WIDTH}
-      visibleNavNames={[COMPONENT_IDS.home]}
-      // drawerWidth={width}
-      drawerPosition={drawerLayoutPosition}
-      renderNavigationView={navigationView}
-    >
-      <Header />
-      <Main />
-      {/* <View style={styles.container}>
-      </View> */}
-    </DrawerLayoutFixed>
+    <View style={styles.container}>
+      <Header homeActive={tab == 'home'} />
+      <View style={styles.body}>
+        <Main />
+        {
+          tab == 'home'
+            ? (
+                <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: theme['c-content-background'] }}>
+                  <Dashboard />
+                </View>
+              )
+            : null
+        }
+      </View>
+    </View>
   )
 }
 
-// const styles = createStyle({
-//   container: {
-//     flex: 1,
-//   },
-// })
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  body: {
+    flex: 1,
+  },
+})
 
 export default Content
