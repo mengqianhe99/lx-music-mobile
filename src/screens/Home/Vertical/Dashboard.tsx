@@ -82,7 +82,7 @@ const NowPlayingCard = memo(() => {
                     name={isPlay ? 'pause' : 'play'}
                     color={getOnPrimaryColor(theme['c-primary'])}
                     rawSize={20}
-                    style={isPlay ? undefined : { transform: [{ translateX: 1.5 }] }}
+                    style={isPlay ? undefined : { transform: [{ translateX: 3 }] }}
                   />
                 </TouchableOpacity>
               )
