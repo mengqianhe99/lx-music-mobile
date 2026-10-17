@@ -57,7 +57,7 @@ const TogglePlayBtn = ({ size }: { size: number }) => {
       activeOpacity={0.7}
       onPress={togglePlay}
     >
-      <Icon name={isPlay ? 'pause' : 'play'} color={getOnPrimaryColor(theme['c-primary'])} rawSize={size * 0.42} />
+      <Icon name={isPlay ? 'pause' : 'play'} color={getOnPrimaryColor(theme['c-primary'])} rawSize={size * 0.42} style={isPlay ? undefined : { transform: [{ translateX: size * 0.42 * 0.15 }] }} />
     </TouchableOpacity>
   )
 }
